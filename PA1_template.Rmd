@@ -10,7 +10,9 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Loading and preprocessing the data
 
-```{r, Loading and preprocessing the data}
+```{r Loading and preprocessing the data}
+Sys.setlocale("LC_TIME", "C")
+library(ggplot2)
 get.data <- function (){
         if (!file.exists("data")) {
         message("Creating Data folder in working directory")
@@ -28,13 +30,12 @@ get.data <- function (){
 get.data()
 activity <- read.csv("./data/activity.csv", colClasses = c("numeric", "Date", "numeric"))
 activity$day <- weekdays(activity$date)
-library(ggplot2)
 ```
 # Steps Taken Per Day
 
 ### Histogram of the total number of steps taken per day
 
-```{r, Mean total number of steps taken per day}
+```{r Histogram of the total number of steps taken per day}
 stepsPerDay <- aggregate(steps ~ date, activity, sum, na.rm = TRUE)
 hist(stepsPerDay$steps,
      main = "Steps per day",
@@ -45,19 +46,19 @@ hist(stepsPerDay$steps,
 
 ### Mean steps per day:
 
-```{r, }
+```{r Mean steps per day}
 mean(stepsPerDay$steps)
 ```
 ### Median steps per day:
 
-```{r, }
+```{r Median steps per day}
 median(stepsPerDay$steps)
 ```
 # Average Daily Activity Pattern
 
 ### Time series plot of the 5-minute interval and the average number of steps taken, averaged across all days
 
-```{r, Average daily activity pattern}
+```{r Average Daily Activity Pattern}
 stepsInterval <- aggregate(steps ~ interval, activity, sum, na.rm = TRUE)
 plot(stepsInterval$interval,
      stepsInterval$steps, 
@@ -70,7 +71,7 @@ stepsInterval$interval[which.max(stepsInterval$steps)]
 
 ### 5-minute interval containing the maximum number of steps (averaged across all days)
 
-```{r, }
+```{r Maximum number of steps}
 stepsInterval[which.max(stepsInterval$steps),]$interval
 ```
 
@@ -79,14 +80,14 @@ stepsInterval[which.max(stepsInterval$steps),]$interval
 
 ### Number of NA (missing) step values in the dataset
 
-```{r, Missing values}
+```{r Number of NA}
 sum(is.na(activity))
 ```
 ### Replacing Missing Values
 
 WE'll replace steps missing values by the mean number of steps taken for the corresponding time interval and weekday.
 
-```{r, }
+```{r Replacing Missing Values}
 intervalDay <- aggregate(steps ~ interval + day,
                          activity,
                          mean, na.rm = TRUE)
@@ -101,7 +102,7 @@ activityInput <- activityInput[order(activityInput$date, activityInput$interval)
 ```
 ### Histogram of the total number of steps taken per day with inputed values
 
-```{r, Mean total number of steps taken per day with inputed values}
+```{r Histogram of the total number of steps taken per day with inputed values}
 stepsPerDayInput <- aggregate(steps ~ date,
                                 activityInput, 
                                 sum, 
@@ -115,25 +116,26 @@ hist(stepsPerDayInput$steps,
 
 ### Mean steps per day with inputed values:
 
-```{r, }
+```{r Mean steps per day with inputed values}
 mean(stepsPerDayInput$steps)
 ```
 ### Median steps per day inputed values:
 
-```{r, }
+```{r Median steps per day inputed values}
 median(stepsPerDayInput$steps)
 ```
 We can notice that including inputted values both median and mean total number of steps taken per day increase.
 
-### Are there differences in activity patterns between weekdays and weekends?
+### Activity patterns for weekdays and weekends
 
-```{r, }
+```{r Activity patterns for weekdays and weekends}
 activityInput$daytype <- ifelse(activityInput$day %in% c("Saturday", "Sunday"),"Weekend", "Weekday")
+head(activityInput$day)
 stepsPerDaytypeInput <- aggregate(steps ~ interval + daytype, activityInput, mean)
 ggplot(stepsPerDaytypeInput, aes(x=interval,y=steps)) + 
 geom_line(color="blue",size=0.7) + 
-facet_wrap(~daytype, nrow=2, ncol=1) + 
-labs(x="Interval",y="Number of Steps")
+labs(x="Interval",y="Number of Steps") + 
+facet_wrap(~daytype, nrow=2, ncol=1)
 ```
 
 
