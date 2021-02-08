@@ -1,7 +1,9 @@
 ---
-title: "Reproducible Research: Peer Assessment 1"
+title: 'Reproducible Research: Peer Assessment 1'
 author: "Victor Borges"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -41,7 +43,7 @@ hist(stepsPerDay$steps,
      main = "Steps per day",
      xlab = "Steps",
      col = "blue",
-     breaks = 7)
+     breaks = 10)
 ```
 
 ### Mean steps per day:
@@ -111,7 +113,7 @@ hist(stepsPerDayInput$steps,
      main = "Steps per day",
      xlab = "Steps",
      col = "blue",
-     breaks = 7)
+     breaks = 10)
 ```
 
 ### Mean steps per day with inputed values:
